@@ -3,6 +3,7 @@ type User = {
   firstName: string
   lastName: string
   id: string
+  [key: string]: string
 }
 export const LoginForm = () => {
   // Store the username so we can reference it in a submit handler
@@ -10,6 +11,8 @@ export const LoginForm = () => {
 
   // Create a state for the user data we are going to receive
   const [userData, setUserData] = useState<User | null>(null)
+  console.log(userData);
+
 
   const handleUsernameChange = useCallback((event: any) => {
     setUsername(event.target.value)
@@ -38,8 +41,8 @@ export const LoginForm = () => {
         method: 'GET',
       })
         .then((res) => res.json())
-        // Update the state with the received response
-        // .then(setUserData)
+      // Update the state with the received response
+      // .then(setUserData)
     },
     [username]
   )
@@ -47,11 +50,19 @@ export const LoginForm = () => {
   if (userData) {
     return (
       <div>
-        <h1>
-          <span data-testid="firstName">{userData.firstName}</span>{' '}
-          <span data-testid="lastName">{userData.lastName}</span>
-        </h1>
-        <p data-testid="userId">{userData.id}</p>
+        <h2>User Data</h2>
+        <table style={{ textAlign: 'left' }}>
+          <tr>
+            <th style={{ width: '60px' }}>Key</th>
+            <th>Value</th>
+          </tr>
+          {Object.keys(userData).map(key => (
+            <tr>
+              <th style={{ width: '60px' }}>{key}</th>
+              <td data-testid={key}>{userData[key]}</td>
+            </tr>
+          ))}
+        </table>
       </div>
     )
   }

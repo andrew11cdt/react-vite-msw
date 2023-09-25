@@ -1,15 +1,23 @@
-import { rest  } from 'msw'
+import { rest } from 'msw'
+import { faker } from '@faker-js/faker'
 export const handlers = [
   rest.post('/login', (req, res, ctx) => {
     // Persist user's authentication in the session
     sessionStorage.setItem('is-authenticated', 'true')
-    console.log(req, res, ctx);
+    const fakeData = {
+        id: faker.string.uuid(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        phone: faker.phone.imei(),
+        title: faker.person.jobTitle(),
+        jobDesc: faker.person.jobDescriptor(),
+        message: faker.helpers.fake(
+          'Faking a person named {{person.prefix}} {{person.middleName}} {{person.lastName}}, how are you today?'
+        ),
+        lorem: faker.lorem.paragraphs(2, '<br/>\n')
+    }
     return res(
-      ctx.json({
-        id: 'some-id-for-coffee-from-mocking-data',
-        firstName: 'Coffee',
-        lastName: 'In',
-      })
+      ctx.json(fakeData)
     )
   }),
 
